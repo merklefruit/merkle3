@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 csv = "1.1.6"
+ethers = "0.17.0"
 rs_merkle = "1.2.0"
