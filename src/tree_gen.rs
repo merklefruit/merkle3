@@ -6,7 +6,7 @@ use ethers::{
 };
 use indicatif::{ProgressBar, ProgressState, ProgressStyle};
 use rs_merkle::{Hasher, MerkleTree};
-use std::{error::Error as StdError, fmt::Write, process, sync::Arc};
+use std::{error::Error as StdError, fmt::Write, process};
 
 #[derive(Clone)]
 pub struct Keccak256 {}
@@ -19,7 +19,7 @@ impl Hasher for Keccak256 {
     }
 }
 
-fn parse_leaf(line: Result<StringRecord, Error>) -> Result<Bytes, Error> {
+pub(crate) fn parse_leaf(line: Result<StringRecord, Error>) -> Result<Bytes, Error> {
     let line = line?;
     // todo: remember to change to get(1) and get(2) with active_users
     let address_raw = line.get(1).unwrap()[2..].to_string();
@@ -86,15 +86,15 @@ pub fn generate_tree_from_csv(path: &str) -> Result<MerkleTree<Keccak256>, Box<d
     println!("Root: {} ", tree.root_hex().unwrap());
     println!("Done building Merkle tree in {:?}", time.elapsed());
 
-    // Generate proof for every leaf:
-    let mut proofs: Vec<Vec<String>> = vec![];
+    // // Generate proof for every leaf:
+    // let mut proofs: Vec<Vec<String>> = vec![];
 
-    for (i, _) in hashes.iter().enumerate() {
-        let proof = Arc::new(tree.proof(&[i]));
-        proofs.push(proof.proof_hashes_hex());
-    }
+    // for (i, _) in hashes.iter().enumerate() {
+    //     let proof = Arc::new(tree.proof(&[i]));
+    //     proofs.push(proof.proof_hashes_hex());
+    // }
 
-    println!("Done generating proofs in {:?}", time.elapsed());
+    // println!("Done generating proofs in {:?}", time.elapsed());
 
     Ok(tree)
 }
