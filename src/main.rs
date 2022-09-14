@@ -21,8 +21,9 @@ impl Hasher for Keccak256 {
 
 fn parse_leaf(line: Result<StringRecord, Error>) -> Result<Bytes, Error> {
     let line = line?;
-    let address_raw = line.get(1).unwrap()[2..].to_string();
-    let label = line.get(2).unwrap().to_string();
+    // todo: remember to change to get(1) and get(2) with active_users
+    let address_raw = line.get(0).unwrap()[2..].to_string();
+    let label = line.get(1).unwrap().to_string();
 
     let address = &hex::decode(address_raw).unwrap();
     let address = to_checksum(&H160::from_slice(address), None);
@@ -33,7 +34,7 @@ fn parse_leaf(line: Result<StringRecord, Error>) -> Result<Bytes, Error> {
 }
 
 fn main() -> Result<(), Box<dyn StdError>> {
-    let path = "./data/active_users_audience.csv";
+    let path = "./data/tide.csv";
     let time = std::time::Instant::now();
     let total_size = std::fs::metadata(path)?.len();
     let line_size = 57;
